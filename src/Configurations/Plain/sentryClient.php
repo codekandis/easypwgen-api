@@ -8,6 +8,6 @@ return [
 	'displayErrors' => false,
 	'errorTypes'    => E_ALL,
 	'environment'   => 'production',
-	'release'       => '0.4.0',
+	'release'       => '0.5.0',
 	'serverName'    => 'api.easypwgen.codekandis'
 ];
