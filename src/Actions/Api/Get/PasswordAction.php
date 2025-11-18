@@ -11,6 +11,7 @@ use CodeKandis\Tiphy\Actions\AbstractAction;
 use CodeKandis\Tiphy\Http\Responses\JsonResponder;
 use CodeKandis\Tiphy\Http\Responses\StatusCodes;
 use JsonException;
+use function array_key_exists;
 
 /**
  * Represents the HTTP `GET` password action.
@@ -19,6 +20,12 @@ use JsonException;
  */
 class PasswordAction extends AbstractAction
 {
+	/**
+	 * Represents the default password length.
+	 * @var int
+	 */
+	private const DEFAULT_PASSWORD_LENGTH = 8;
+
 	/**
 	 * Stores the API URI builder.
 	 * @var ApiUriBuilderInterface
@@ -44,13 +51,26 @@ class PasswordAction extends AbstractAction
 		$this->extendUris( $password );
 
 		$password->value = ( new RandomizedPasswordGenerator() )
-			->generate( 8 );
+			->generate(
+				$this->getPasswordLength()
+			);
 
 		$responseData = [
 			'password' => $password,
 		];
-		$response = new JsonResponder( StatusCodes::OK, $responseData );
+		$response     = new JsonResponder( StatusCodes::OK, $responseData );
 		$response->respond();
+	}
+
+	/**
+	 * Gets the length of the password.
+	 * @return int The length of the password.
+	 */
+	private function getPasswordLength(): int
+	{
+		return false === array_key_exists( 'length', $_GET )
+			? static::DEFAULT_PASSWORD_LENGTH
+			: (int) $_GET[ 'length' ];
 	}
 
 	/**
